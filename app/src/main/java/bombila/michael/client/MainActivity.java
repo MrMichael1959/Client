@@ -982,8 +982,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //-------------------------------------------------------------------------------------
     void order_encode() {
 //-------------------------------------------------------------------------------------
-        JSONArray jaddresses = new JSONArray();
-        JSONArray jcoordes   = new JSONArray();
+        JSONArray jlocalities = new JSONArray();
+        JSONArray jaddresses  = new JSONArray();
+        JSONArray jcoordes    = new JSONArray();
         JSONArray jcoord = null;
         for (MyPlace p : places) {
             try {
@@ -994,6 +995,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            jlocalities.put(p.getLocality());
             jaddresses.put(p.getAddress());
             jcoordes.put(jcoord);
         }
@@ -1004,6 +1006,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             data.put("cost_total", _cost_total);
             data.put("on_time", _on_time);
             data.put("PS", _PS);
+            data.put("localities", jlocalities);
             data.put("addresses", jaddresses);
             data.put("coordes", jcoordes);
         } catch (JSONException e) {
