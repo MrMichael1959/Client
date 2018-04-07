@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 //*************************************************************************************
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         TextToSpeech.OnInitListener {
-    //*************************************************************************************
+//*************************************************************************************
     String _get_order_by_phoneUrl = "http://185.25.119.3/BombilaClient/get_order_by_phone.php";
     String _get_city_dataUrl = "http://185.25.119.3/BombilaClient/get_city_data.php";
     String _get_order_by_idUrl = "http://185.25.119.3/BombilaClient/get_order_by_id.php";
@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Context context;
 
-    //-------------------------------------------------------------------------------------
-    @SuppressLint("MissingPermission")
+//-------------------------------------------------------------------------------------
+//    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //-------------------------------------------------------------------------------------
