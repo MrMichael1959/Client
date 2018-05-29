@@ -13,4 +13,5 @@
     <string name="OrderDelete">Отказ от заказа</string>
     <string name="call_taxi">Вызов такси</string>
     <string name="exit_from_app">Выход из приложения</string>
+    <string name="Scarga">ФОНАРЬ\n(водитель не приехал)</string>
 </resources>

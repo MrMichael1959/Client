@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     LinearLayout llMain, llPS, llOnTime;
     TextView tvCity, tvInfo, tvPS, tvTextPS, tvOnTime, tvTextOnTime, tvCallTaxi,
-            tvOrderClose, tvOrderDelete;
+            tvOrderClose, tvOrderDelete, tvScarga;
     ImageView ivMenu, ivStatus, ivPS, ivOnTime;
     ProgressBar pb;
 
@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Context context;
 
 //-------------------------------------------------------------------------------------
-//    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //-------------------------------------------------------------------------------------
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _number_phone = getSharedPreferences("bombila_client_pref", MODE_PRIVATE)
                 .getString("number_phone", "");
 
+//dialogPhone();
         if (_number_phone.equals("")) dialogPhone();
 
         mTTS = new TextToSpeech(this, this);
@@ -122,11 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         review();
 
-//        init();
-
         new HttpPost().execute(_get_order_by_phoneUrl, _number_phone);
-
-//        STATUS = _order_status;
 
     }
 //--------------------------------------------------------------------------------------------------
@@ -157,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //--------------------------------------------------------------------------------------------------
         super.onStart();
     }
-    //--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
     @Override
     public void onInit(int status) {
 //--------------------------------------------------------------------------------------------------
@@ -205,18 +201,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _order_status.equals("place");
 
         switch (v.getId()) {
+            case R.id.tvScarga:
+//                daemon.cancel(false);
+                updateOrder("фонарь");
+                finish();
+                break;
             case R.id.tvCallTaxi:
                 setOrder("free");
                 daemon.execute();
                 DAEMON = false;
                 break;
             case R.id.tvOrderDelete:
-                daemon.cancel(false);
+//                daemon.cancel(false);
                 updateOrder("delete");
                 finish();
                 break;
             case R.id.tvOrderClose:
-                daemon.cancel(false);
+//                daemon.cancel(false);
                 updateOrder("close");
                 finish();
                 break;
@@ -342,6 +343,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 //-------------------------------------------------------------------------------------
+    void dialogExit() {
+//-------------------------------------------------------------------------------------
+        final AlertDialog dialog;
+        AlertDialog.Builder add = new AlertDialog.Builder(this);
+        add.setCancelable(false)
+                .setMessage("Вы действительно хотите выйти из приложения?")
+                .setTitle("Выход")
+                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+//                        putPreferences();
+                        finish();
+                    }
+                });
+
+        dialog = add.create();
+        dialog.show();
+    }
+//-------------------------------------------------------------------------------------
     void dialogPS() {
 //-------------------------------------------------------------------------------------
         final View view = getLayoutInflater().inflate(R.layout.dialog_ps, null);
@@ -409,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void dialogStatus() {
 //-------------------------------------------------------------------------------------
         String msg = "";
+        String[] arr;
         final AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder .setTitle("Статус заказа");
@@ -422,11 +450,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builder.setIcon(R.drawable.ic_status_orange);
                 break;
             case "accept":
+                arr = _driver_info.split("!");
                 msg = "Заказ назначен.";
+                msg += "\nмарка: " + arr[0];
+                msg += "\nцвет: "  + arr[1];
+                msg += "\nномер: " + arr[2];
+                msg += "\nтел.: "  + arr[3].replace(" ", "+");
                 builder.setIcon(R.drawable.ic_status_green);
                 break;
             case "place":
-                String[] arr = _driver_info.split("!");
+                arr = _driver_info.split("!");
                 msg = "Машина на месте.";
                 msg += "\nмарка: " + arr[0];
                 msg += "\nцвет: "  + arr[1];
@@ -474,6 +507,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void statusSpeek() {
 //-------------------------------------------------------------------------------------
         String msg = "";
+        String[] arr;
         switch (_order_status) {
             case "none":
                 msg = "Заказ не оформлен.";
@@ -482,10 +516,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg = "Заказ обрабатывается.";
                 break;
             case "accept":
+                arr = _driver_info.split("!");
                 msg = "Заказ назначен.";
+                msg += "\nмарка: " + arr[0];
+                msg += "\nцвет: " + arr[1];
+                msg += "\nномер: ";
+                if (arr[2].length() < 4) msg += arr[2];
+                else msg += arr[2].substring(0,2) + " " + arr[2].substring(2);
                 break;
             case "place":
-                String[] arr = _driver_info.split("!");
+                arr = _driver_info.split("!");
                 msg = "Машина на месте.";
                 msg += "\nмарка: " + arr[0];
                 msg += "\nцвет: " + arr[1];
@@ -1051,15 +1091,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvCallTaxi.setVisibility(View.GONE);
             return;
         }
-/*
-        String origin = "origin=" + addressEncode(places.get(0).getAddress());
-        StringBuilder waypoints = new StringBuilder("waypoints=");
-        for (int i=1; i<size-1; i++) {
-            if (i != 1) waypoints.append("|");
-            waypoints.append(addressEncode(places.get(i).getAddress()));
-        }
-        String destination = "destination=" + addressEncode(places.get(size-1).getAddress());
-*/
         String origin = "origin=" +
                 places.get(0).getLatlng().latitude + "," +
                 places.get(0).getLatlng().longitude;
@@ -1077,7 +1108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new HttpGet().execute(_directionsUrl,origin,destination, waypoints.toString(),_key);
     }
 //-------------------------------------------------------------------------------------
-void initView() {
+    void initView() {
 //-------------------------------------------------------------------------------------
         ll[0] = (LinearLayout) findViewById(R.id.ll0);
         ll[1] = (LinearLayout) findViewById(R.id.ll1);
@@ -1103,6 +1134,7 @@ void initView() {
         tvCallTaxi   = (TextView) findViewById(R.id.tvCallTaxi);     tvCallTaxi.setOnClickListener(this);
         tvOrderClose = (TextView) findViewById(R.id.tvOrderClose);   tvOrderClose.setOnClickListener(this);
         tvOrderDelete= (TextView) findViewById(R.id.tvOrderDelete);  tvOrderDelete.setOnClickListener(this);
+        tvScarga     = (TextView) findViewById(R.id.tvScarga);       tvScarga.setOnClickListener(this);
         llMain.setVisibility(View.VISIBLE);
         llPS.setVisibility(View.GONE);
         llOnTime.setVisibility(View.GONE);
@@ -1250,6 +1282,9 @@ void initView() {
 
                 String order = httpPost(_get_order_by_idUrl, _order_id);
                 getOrderInfo(order);
+                if (_order_status.equals("close")) {
+                    publishProgress("scarga");
+                }
                 publishProgress("order");
                 sleep(5000);
             }
@@ -1264,9 +1299,11 @@ void initView() {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
+            if(values[0].equals("scarga")) {
+                tvScarga.setVisibility(View.VISIBLE);
+            }
             if(values[0].equals("order")) {
                 showOrder();
-
                 if (!STATUS.equals(_order_status)) {
                     STATUS = _order_status;
                     statusSpeek();
