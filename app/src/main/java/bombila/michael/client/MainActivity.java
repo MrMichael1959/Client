@@ -52,12 +52,12 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         TextToSpeech.OnInitListener {
 //*************************************************************************************
-    String _get_order_by_phoneUrl = "http://185.25.119.3/BombilaClient/get_order_by_phone.php";
-    String _get_city_dataUrl = "http://185.25.119.3/BombilaClient/get_city_data.php";
-    String _get_order_by_idUrl = "http://185.25.119.3/BombilaClient/get_order_by_id.php";
-    String _set_orderUrl = "http://185.25.119.3/BombilaClient/set_order.php";
-    String _upd_orderUrl = "http://185.25.119.3/BombilaClient/upd_order.php";
-    String _directionsUrl = "https://maps.googleapis.com/maps/api/directions/json?";
+    String _get_order_by_phoneUrl = "http://client.bombila.taxi/get_order_by_phone.php";
+    String _get_city_dataUrl      = "http://client.bombila.taxi/get_city_data.php";
+    String _get_order_by_idUrl    = "http://client.bombila.taxi/get_order_by_id.php";
+    String _set_orderUrl          = "http://client.bombila.taxi/set_order.php";
+    String _upd_orderUrl          = "http://client.bombila.taxi/upd_order.php";
+    String _directionsUrl         = "https://maps.googleapis.com/maps/api/directions/json?";
     //    String _geocodeUrl    =         "https://maps.googleapis.com/maps/api/geocode/json?";
     String _key = "key=AIzaSyA0FZ6BTNZVDgcB44U7bNXOYKlh_AfCnV4";
 

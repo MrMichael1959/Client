@@ -6,13 +6,15 @@ android {
         applicationId "bombila.michael.client"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 7
-        versionName "1.7"
+        versionCode 9
+        versionName "1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true  // -- always add this above minifyEnabled --
+            minifyEnabled true
+//            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
