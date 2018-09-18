@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String _order_data;
     String _order_status = "none";
     String _city;
+    String _adminarea;
     String _driver_info;
     String _number_phone;
 
@@ -323,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "Адрес не определен.", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    if (places.size() == 0) _adminarea = addresses.get(0).getAdminArea();
                     place = new MyPlace(pp.getLatLng(), address, addresses.get(0).getLocality());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1038,6 +1040,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         JSONObject data = new JSONObject();
         try {
+            data.put("adminarea", _adminarea);
             data.put("city", _city);
             data.put("order_time", String.valueOf(Calendar.getInstance().getTimeInMillis()));
             data.put("cost_total", _cost_total);
